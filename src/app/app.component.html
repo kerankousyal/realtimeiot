@@ -1,14 +1,14 @@
-<mat-toolbar color="primary">WebSocket Demo App</mat-toolbar>
+<mat-toolbar color="primary">Real Time Dashboard</mat-toolbar>
 
 <div class="container">
 
   <form class="form-container">
 
-    <mat-form-field>
-      <input name="address" placeholder="Address" [(ngModel)]="address" matInput>
-      <button aria-label="Connect to websocket server!" (click)="connect()" 
-      matSuffix mat-icon-button><mat-icon>send</mat-icon></button>
-    </mat-form-field>
+    <!--<mat-form-field>-->
+      <!--<input name="address" placeholder="Address" [(ngModel)]="address" matInput>-->
+      <button mat-stroked-button aria-label="Connect to websocket server!" (click)="connect()"
+      matSuffix mat-icon-button color="primary"><mat-icon>Start Monitoring</mat-icon></button>
+    <!--</mat-form-field>-->
     
     <!--<mat-form-field>
       <input name="message" placeholder="Message" (keyup)="onMessageKeyup($event)" [(ngModel)]="message" 
@@ -19,12 +19,12 @@
 
   </form>
 
+  <div id="chartContainer" style="height: 370px; width: 100%; margin-left:auto;margin-right:auto;"></div>
   <div class="websocket-console" #console>
     <ng-template ngFor let-message [ngForOf]="messageLog | async" let-i="index">
       <pre style="word-wrap: break-word;">{{message}}</pre>
     </ng-template>
   </div>
 
-  <!--<plotly-plot [data]="graph.data" [layout]="graph.layout"></plotly-plot>-->
 
 </div>

@@ -23,7 +23,9 @@
               "src/assets"
             ],
             "styles": [],
-            "scripts": []
+            "scripts": [
+              "src/app/canvasjs.min.js"
+            ]
           },
           "configurations": {
             "production": {

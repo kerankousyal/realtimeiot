@@ -26,13 +26,17 @@ export class AppComponent  implements OnInit {
 
   scrollEndNow = false;
   chart;
-    dataPoints = [];
-    dpsLength = 0;
+  dataPoints = [];
+  dpsLength = 0;
+  chart1;
+  dataPoints1 = [];
+  dpsLength1 = 0;
 
   @ViewChild('console') console: ElementRef;
 
   constructor(private _websocket: WebSocketService) {
 
+      this.connect();
     this.connected = _websocket.connected().subscribe(status => {
       this.isConnected = status;
       console.log('status', status);
@@ -42,25 +46,53 @@ export class AppComponent  implements OnInit {
   ngOnInit() {
       this.chart = new CanvasJS.Chart("chartContainer",{
           exportEnabled: false,
-          /*axisX: {
-              interval: 3,
-              intervalType: "seconds",
+          axisX: {
+             //interval: 3,
+             // intervalType: "seconds",
+             // xValueFormatString: "DDD HH:mm:ss"
+              //labelFormatter: function (e) {
+              //    return CanvasJS.formatDate( e.value, "H:mm:ss");
+              //},
               valueFormatString: "HH:mm:ss"
-          },*/
+          },
           axisY: {
               title: "Temperature (in °C)",
               includeZero: false,
               suffix: " °C"
           },
           title:{
-              text:"Live Chart"
+              text:"Current Status"
           },
           data: [{
               name: "Kiran s Beacon 1",
               showInLegend: true,
               yValueFormatString: "#0.## °C",
               type: "spline",
+             xValueType: "dateTime",
               dataPoints : this.dataPoints,
+          }]
+      });
+
+      this.chart1 = new CanvasJS.Chart("chartContainer1",{
+          exportEnabled: false,
+          title: {
+              text: "RSSI signal / Date time"
+          },
+          axisX: {
+              //intervalType: "hour",
+              valueFormatString: "HH:mm:ss",
+              labelMaxWidth: 100, // change label width accordingly
+          },
+          axisY: {
+              title: "RSSI Value"
+          },
+          data: [{
+              name: "Kiran s Beacon 1",
+              showInLegend: true,
+             // yValueFormatString: "#0.## °C",
+              type: "spline",
+              xValueType: "dateTime",
+              dataPoints : this.dataPoints1,
           }]
       });
   }
@@ -69,13 +101,17 @@ export class AppComponent  implements OnInit {
     this.messages = <Subject<any>>this._websocket
       .connect(this.address)
       .map((response: MessageEvent): any => {
-        console.log(JSON.parse(response.data)['time']);
+        console.log(JSON.parse(response.data)['rssi']);
 
-          this.dataPoints.push({x: JSON.parse(response.data)['time'], y: JSON.parse(response.data)['temp']});
-          // new Date(JSON.parse(response.data)['timestamp']).toLocaleTimeString().split(' ')[0]
+          this.dataPoints.push({x: new Date(JSON.parse(response.data)['timestamp']), y: JSON.parse(response.data)['temp']});
           this.dpsLength = this.dataPoints.length;
           this.chart.render();
-          this.updateChart(JSON.parse(response.data)['time'], JSON.parse(response.data)['temp']);
+          this.updateChart(new Date(JSON.parse(response.data)['timestamp']), JSON.parse(response.data)['temp']);
+
+          this.dataPoints1.push({x: new Date(JSON.parse(response.data)['timestamp']), y: JSON.parse(response.data)['rssi']});
+          this.dpsLength1 = this.dataPoints1.length;
+          this.chart1.render();
+          this.updateChart1(new Date(JSON.parse(response.data)['timestamp']), JSON.parse(response.data)['rssi']);
 
         //return response.data;
       });
@@ -109,15 +145,22 @@ export class AppComponent  implements OnInit {
 
     }
 
-    msToTime(s) {
-        var ms = s % 1000;
-        s = (s - ms) / 1000;
-        var secs = s % 60;
-        s = (s - secs) / 60;
-        var mins = s % 60;
-        var hrs = (s - mins) / 60;
+    updateChart1(time, rssi) {
 
-        return hrs + ':' + mins + ':' + secs + '.' + ms;
+
+        this.dataPoints1.push({
+            x: parseInt(time),
+            y: parseInt(rssi)
+        });
+        this.dpsLength1++;
+
+
+        if (this.dataPoints1.length >  20 ) {
+            this.dataPoints1.shift();
+        }
+        this.chart1.render();
+        //  setTimeout(function(){this.updateChart(data)}, 1000);
+
     }
 
 

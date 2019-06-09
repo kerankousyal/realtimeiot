@@ -6,8 +6,8 @@
 
     <!--<mat-form-field>-->
       <!--<input name="address" placeholder="Address" [(ngModel)]="address" matInput>-->
-      <button mat-stroked-button aria-label="Connect to websocket server!" (click)="connect()"
-      matSuffix mat-icon-button color="primary"><mat-icon>Start Monitoring</mat-icon></button>
+      <!--<button mat-stroked-button aria-label="Connect to websocket server!" (click)="connect()"
+      matSuffix mat-icon-button color="primary"><mat-icon>Start Monitoring</mat-icon></button>-->
     <!--</mat-form-field>-->
     
     <!--<mat-form-field>
@@ -20,9 +20,10 @@
   </form>
 
   <div id="chartContainer" style="height: 370px; width: 100%; margin-left:auto;margin-right:auto;"></div>
+  <div id="chartContainer1" style="height: 370px; width: 100%; margin-left:auto;margin-right:auto;"></div>
   <div class="websocket-console" #console>
     <ng-template ngFor let-message [ngForOf]="messageLog | async" let-i="index">
-      <pre style="word-wrap: break-word;">{{message}}</pre>
+      <!--<pre style="word-wrap: break-word;">{{message}}</pre>-->
     </ng-template>
   </div>
 
